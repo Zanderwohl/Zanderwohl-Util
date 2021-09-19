@@ -2,18 +2,37 @@ package com.zanderwohl.util.search;
 
 import java.util.*;
 
+/**
+ * An index for use in searching for phrases by abbreviation or initials.
+ * Similar to the style of autocomplete in Epic Systems' Hyperspace.
+ */
 public class PhraseIndex {
 
+    /**
+     * The actual index. Can be quite large.
+     */
     protected HashMap<String, ArrayList<String>> index;
 
+    /**
+     * Standard constructor. Data is added later.
+     */
     public PhraseIndex(){
         index = new HashMap<>();
     }
 
+    /**
+     * Add a phrase to the index.
+     * @param key The phrase or sentence to add.
+     */
     public void put(String key){
         createIndex(key);
     }
 
+    /**
+     * Create an index for a phrase. Loops a lot. Expensive.
+     * O(n*m) where n is number of works and m is avg length of word.
+     * @param value
+     */
     private void createIndex(String value){
         String[] words = value.split("\\s");
         for(String word: words){
@@ -27,10 +46,19 @@ public class PhraseIndex {
         }
     }
 
+    /**
+     * A set of all the keys... don't know why I coded this or why you'd need it... AJL 2021-09-18
+     * @return
+     */
     public Set<String> keys(){
         return index.keySet();
     }
 
+    /**
+     * Gets the value for an exact key.
+     * @param key The key.
+     * @return The value.
+     */
     public ArrayList<String> values(String key){
         return index.get(key);
     }
@@ -50,6 +78,11 @@ public class PhraseIndex {
     * whoever fix this mess of tree
     * would not track down and murder me.
     * */
+    /**
+     * Searches the key set for values that may match or be similar to the phrase or abbreviation used as the key words.
+     * @param searchTerms The search terms, which may be as many as you want to provide.
+     * @return Any values that match as many of the search terms as possible.
+     */
     public ArrayList<String> search(String searchTerms){
         String[] searchTermsSplit = searchTerms.split("\\s");
         String[] foundTerms = new String[searchTermsSplit.length];

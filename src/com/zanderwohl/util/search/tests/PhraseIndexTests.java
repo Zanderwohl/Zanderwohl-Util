@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
+/**
+ * The test cases for Phrase Index.
+ */
 @RunWith(Parameterized.class)
 public class PhraseIndexTests extends TestCase {
     protected PhraseIndex index;
