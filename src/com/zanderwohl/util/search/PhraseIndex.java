@@ -10,6 +10,8 @@ public class PhraseIndex {
 
     /**
      * The actual index. Can be quite large.
+     * Laid out like
+     * keyword -> entry1 that contains keyword, entry 2 that contains keyword... entry n that contains keyword
      */
     protected HashMap<String, ArrayList<String>> index;
 
@@ -24,8 +26,8 @@ public class PhraseIndex {
      * Add a phrase to the index.
      * @param key The phrase or sentence to add.
      */
-    public void put(String key){
-        createIndex(key);
+    public void put(String key, String... aliases){
+        createIndex(key, aliases);
     }
 
     /**
@@ -33,15 +35,23 @@ public class PhraseIndex {
      * O(n*m) where n is number of works and m is avg length of word.
      * @param value
      */
-    private void createIndex(String value){
+    private void createIndex(String value, String[] aliases){
         String[] words = value.split("\\s");
+        indexWords(words, value);
+        for(String alias: aliases) {
+            String[] aliasWords = alias.split("\\s");
+            indexWords(aliasWords, value);
+        }
+    }
+
+    private void indexWords(String[] words, String phrase){
         for(String word: words){
             for(int i = 1; i < word.length() + 1; i++){
                 String subKey = word.substring(0, i).toUpperCase(Locale.ROOT);
                 if(!index.containsKey(subKey)){
                     index.put(subKey, new ArrayList<>());
                 }
-                index.get(subKey).add(value);
+                index.get(subKey).add(phrase);
             }
         }
     }

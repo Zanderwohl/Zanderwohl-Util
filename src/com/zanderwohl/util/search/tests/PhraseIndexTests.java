@@ -26,6 +26,7 @@ public class PhraseIndexTests extends TestCase {
         SINGLE_WORD,
         EXTRA_WORDS,
         WRONG_PREPOSITIONS,
+        ALIAS
     }
 
     @Before
@@ -35,7 +36,7 @@ public class PhraseIndexTests extends TestCase {
         index.put("Brave Old World");
         index.put("Brave New World 2");
         index.put("Brave Little Toaster");
-        index.put("Fahrenheit 451");
+        index.put("Fahrenheit 451", "Celsius 232");
         index.put("Breaking Dawn");
         index.put("Foundation");
         index.put("Foundation and Empire");
@@ -57,6 +58,9 @@ public class PhraseIndexTests extends TestCase {
                 {"Foundation", new ArrayList<>(Arrays.asList("Foundation", "Foundation and Empire", "Second Foundation")), REASONS.SINGLE_WORD},
                 {"Foundation Four", new ArrayList<>(Arrays.asList("Foundation", "Foundation and Empire", "Second Foundation")), REASONS.EXTRA_WORDS},
                 {"Origin Into the Species", new ArrayList<>(Arrays.asList("On the Origin of the Species by Means of Natural Selection, or the Preservation of Favoured Races in the Struggle for Life")), REASONS.WRONG_PREPOSITIONS},
+                {"Celsius", new ArrayList<>(Arrays.asList("Fahrenheit 451")), REASONS.ALIAS},
+                {"232", new ArrayList<>(Arrays.asList("Fahrenheit 451")), REASONS.ALIAS},
+                {"451 232", new ArrayList<>(Arrays.asList("Fahrenheit 451")), REASONS.ALIAS},
         });
     }
 
