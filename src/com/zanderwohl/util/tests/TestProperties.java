@@ -1,13 +1,14 @@
 package com.zanderwohl.util.tests;
 
 import com.zanderwohl.util.Properties;
+import junit.framework.TestCase;
 import org.junit.Test;
 
 import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
 
-public class TestProperties {
+public class TestProperties extends TestCase {
 
     @Test
     public void testToMap(){
