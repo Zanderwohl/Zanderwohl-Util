@@ -1,10 +1,11 @@
 package com.zanderwohl.util.tests;
 
 import com.zanderwohl.util.Precedence;
-import junit.framework.TestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class PrecedenceTests extends TestCase {
+import static org.junit.jupiter.api.Assertions.*;
+
+public class PrecedenceTests {
 
     @Test
     public void testBlanksLastString(){

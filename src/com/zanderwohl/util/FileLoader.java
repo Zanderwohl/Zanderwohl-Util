@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -12,7 +14,8 @@ import java.util.Scanner;
  */
 public class FileLoader {
 
-    private String name, extension, contents;
+    private String fullPath, path, name, extension, contents;
+    private boolean isResource;
     IOException keepError = null;
 
     /**
@@ -27,26 +30,18 @@ public class FileLoader {
 
     /**
      * Open a file based on its name.
-     * @param fileName // TODO ???
-     * @param loadAsResource // If true, will get file from resources folder.
+     * @param filePath // TODO ???
+     * @param fromResources // If true, will get file from resources folder.
      */
-    public FileLoader(String fileName, boolean loadAsResource){
-        if(loadAsResource){
-            String _contents = "";
-            try(InputStream in = FileLoader.class.getResourceAsStream(fileName);
-                Scanner scan = new Scanner (in, StandardCharsets.UTF_8.name())){
-                _contents = scan.useDelimiter("\\A").next();
-            }
-            catch (IOException e){
-                keepError = e; // yuck yuck yuck yuck state. Enterprisey garbage.
-            }
-            contents = _contents;
-        } else {
-            String[] split = fileName.split("\\.");
-            name = split[0];
-            extension = split[1];
-            contents = null;
-        }
+    public FileLoader(String filePath, boolean fromResources){
+        isResource = fromResources;
+        fullPath = filePath;
+        String[] nameAndExtension = filePath.split("\\.");
+        path = nameAndExtension[0];
+        String[] directories = path.split("[\\\\/]"); // Forward or back-slash.
+        name = directories[directories.length - 1];
+        extension = nameAndExtension[1];
+        contents = null;
     }
 
     /**
@@ -54,7 +49,7 @@ public class FileLoader {
      * @return The full name of the file.
      */
     public String getFullName(){
-        return name + "." + extension;
+        return fullPath;
     }
 
     /**
@@ -74,17 +69,46 @@ public class FileLoader {
     }
 
     /**
+     * Get the full path, including file name and exension.
+     * @return The path as given in the constructor.
+     */
+    public String getFullPath(){
+        return fullPath;
+    }
+
+    /**
      * Returns the content of the file in a single string with line breaks.
      * @return A string containing the entire contents of the file.
      */
-    public String getFile() throws FileNotFoundException, IOException{
+    public String getFile() throws IOException{
         if(keepError != null){
             throw keepError;
         }
         if(contents == null){
-            contents = fileToString();
+            if(isResource){
+                contents = resourceFileToString();
+            }
+            else {
+                contents = fileToString();
+            }
         }
         return contents;
+    }
+
+    /**
+     * Get a resource file as a string.
+     * @return A string containing the entire contents of the file.
+     */
+    private String resourceFileToString() {
+        String _contents = "";
+        try(InputStream in = FileLoader.class.getResourceAsStream(fullPath);
+            Scanner scan = new Scanner (in, StandardCharsets.UTF_8.name())){
+            _contents = scan.useDelimiter("\\A").next();
+        }
+        catch (IOException e){
+            keepError = e; // yuck yuck yuck yuck state. Enterprisey garbage.
+        }
+        return _contents;
     }
 
     /**
@@ -114,6 +138,16 @@ public class FileLoader {
         }
         file.close();
         return fileContents;
+    }
+
+    public List<String> fileToList() throws IOException {
+        List<String> list = new ArrayList<>();
+        String fileStuff = getFile();
+        String[] lines = fileStuff.split("\n");
+        for(String line: lines){
+            list.add(line);
+        }
+        return list;
     }
 
 
