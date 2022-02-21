@@ -4,10 +4,6 @@ import com.zanderwohl.util.FileLoader;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 
-import java.io.BufferedReader;
-import java.io.StringReader;
-import java.lang.reflect.Field;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class FileLoaderTests {
